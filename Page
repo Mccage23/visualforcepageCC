@@ -1,0 +1,131 @@
+<apex:page controller="CustomerServicePageController">
+    <apex:includeScript value="https://code.jquery.com/jquery-3.2.1.min.js"  />
+    <style>
+        /* Hide the Id column */
+        .accId{
+        display: none;
+        }
+    </style>
+    <script type="text/javascript">
+    $j = jQuery.noConflict();
+
+    // Click Search button when enter is pressed
+    $j(document).ready(function(){
+        $j(document).on("keypress", ".inputSearch", function(){
+            if(event.keyCode == 13){
+                $j(".btnSearch").click();
+                return false;
+            }
+        });
+    });
+
+    // Call the actionFunction when a record is selected
+    function clickElem(elem){
+        var id = $j(elem).find(".accId").text();
+        getOrders(id);
+    }
+    </script>
+    <apex:form >
+        <apex:inputText value="{!searchStr}" styleClass="inputSearch"/>
+        <apex:commandButton value="Search" action="{!search}" styleClass="btnSearch" status="actStatusId" reRender="acct"/>
+        <apex:actionStatus id="actStatusId">
+            <apex:facet name="start" >
+                <img src="/img/loading.gif"/>
+            </apex:facet>
+        </apex:actionStatus>
+        <apex:actionFunction name="getOrders" action="{!orderDetails}" reRender="details" status="actStatusId">
+            <apex:param name="accId" assignTo="{!selectedCustomerId}" value=""/>
+        </apex:actionFunction>
+    </apex:form>
+
+    <apex:outputPanel title="" id="error">
+        <apex:pageMessages ></apex:pageMessages>
+    </apex:outputPanel>
+
+    <apex:pageBlock title="Accounts that match '{!searchStr}'" id="acct">
+        <apex:pageBlockSection title="Select an Account to view Details" columns="2" id="acctList">
+            <apex:pageblockTable value="{!accList }" var="acc" rowClasses="tooltip" onRowClick="clickElem(this);">
+                <apex:column headerClass="accId" value="{!acc.Id}" styleClass="accId"/>
+                <apex:column value="{!acc.name}"/>
+                <apex:column headerValue="Type" value="{!acc.rstk__socust_sf_account__r.RecordType.Name}"/>
+            </apex:pageblockTable>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+
+    <apex:pageBlock title="{!selectedCustomer.name}" id="details">
+    <apex:pageBlockSection title="Sales Orders" id="orde">
+        <apex:pageblockTable value="{!relatedOrders}" var="ord">
+            <apex:column headerValue="Name">
+                <apex:outputlink value="/{!ord.Id}">{!ord.name}</apex:outputlink>
+            </apex:column>
+            <apex:column headerValue="Customer" value="{!ord.rstk__sohdr_custno__c}"/>
+            <apex:column headerValue="Order Number" value="{!ord.rstk__sohdr_order__c}"/>
+            <apex:column headerValue="Order Total" value="{!ord.rstk__sohdr_ordertotal__c}" />
+            <apex:column headerValue="Customer PO" value="{!ord.rstk__sohdr_custpo__c}" />
+        </apex:pageblockTable>
+    </apex:pageBlockSection>
+
+    <apex:PageBlockSection title="Invoices" id="inv">
+        <apex:pageBlockTable value="{!InvoiceO}" var="ivc">
+            <apex:column headerValue="Name">
+                <apex:outputlink value="/{!ivc.Id}">{!ivc.name}</apex:outputlink>
+            </apex:column>
+            <apex:column headerValue="Customer" value="{!ivc.rstk__soinv_account__c}"/>
+            <apex:column headerValue="Sales Order" value="{!ivc.rstk__soinv_order__c}"/>
+            <apex:column headerValue="Invoice Number" value="{!ivc.rstk__soinv_invoice__c}" />
+            <apex:column headerValue="Invoice Date" value="{!ivc.rstk__soinv_invdate__c}" />
+            <apex:column headerValue="Invoice Total" value="${!ivc.rstk__soinv_grandtotal__c}" />
+        </apex:pageBlockTable>
+    </apex:PageBlockSection>
+
+    <apex:pageBlockSection title="Shippers" id="sos">
+        <apex:pageblockTable value="{!SOship}" var="sos">
+            <apex:column headerValue="Name">
+                <apex:outputlink value="/{!sos.Id}">{!sos.name}</apex:outputlink>
+            </apex:column>
+            <apex:column headerValue="Customer" value="{!sos.rstk__soship_custno__c}"/>
+            <apex:column headerValue="Invoice" value="{!sos.rstk__soship_invoice__c}"/>
+            <apex:column headerValue="Ship to" value="{!sos.rstk__soship_name__c}" />
+            <apex:column headerValue="Address" value="{!sos.rstk__soship_address1__c}" />
+            <apex:column headerValue="Order" value="{!sos.rstk__soship_order__c}" />
+            <apex:column headerValue="Total" value="{!sos.rstk__soship_total__c}" />
+        </apex:pageblockTable>
+    </apex:pageBlockSection>
+
+    <apex:pageBlockSection title="RMA's" id="rma">
+        <apex:pageblockTable value="{!RMAList}" var="rma">
+            <apex:column headerValue="Name" value="{!rma.rstk__sorma_sormh__c}"/>
+            <apex:column headerValue="Customer" value="{!rma.rstk__sorma_custno__c}"/>
+            <apex:column headerValue="Date" value="{!rma.rstk__sorma_date__c}"/>
+            <apex:column headerValue="Reason" value="{!rma.rstk__sorma_reason__c}" />
+            <apex:column headerValue="Product" value="{!rma.rstk__sorma_soprod__c}" />
+        </apex:pageblockTable>
+    </apex:pageBlockSection>
+
+    <!--
+    <apex:pageBlockSection title="Payments" id="pay">
+        <apex:pageblockTable value="{!PayList}" var="pay">
+            <apex:column headerValue="Name" value="{!pay.c2g__CashEntry__c}"/>
+            <apex:column headerValue="Name" value="{!pay.c2g__Account__c}"/>
+            <apex:column headerValue="Payment method" value="{!pay.c2g__AccountPaymentMethod__c}"/>
+            <apex:column headerValue="Date" value="{!pay.c2g__CashEntryDate__c}"/>
+            <apex:column headerValue="Payment" value="{!pay.c2g__CashEntryValue__c}" />
+        </apex:pageblockTable>
+    </apex:pageBlockSection>
+-->
+
+    <apex:pageBlockSection title="Payments" id="cas">
+        <apex:pageblockTable value="{!CashList}" var="cas">
+            <apex:column headerValue="Name">
+                <apex:outputLink value="/{!cas.Id}">{!cas.name}</apex:outputLink>
+            </apex:column>
+            <apex:column headerValue="Payment method" value="{!cas.c2g__PaymentMethod__c}"/>
+            <apex:column headerValue="Date" value="{!cas.c2g__Date__c}"/>
+            <apex:column headerValue="Payment" value="{!cas.c2g__NetValue__c}" />
+            <apex:column headerValue="Status" value="{!cas.c2g__Status__c}"/>
+        </apex:pageblockTable>
+    </apex:pageBlockSection>
+    </apex:pageBlock>
+
+
+</apex:page>
