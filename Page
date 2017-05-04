@@ -11,7 +11,7 @@
 
     // Click Search button when enter is pressed
     $j(document).ready(function(){
-        $j(document).on("keypress", ".inputSearch", function(){
+        $j(document).on("keypress", ".inputSearch", function(event){
             if(event.keyCode == 13){
                 $j(".btnSearch").click();
                 return false;
@@ -42,7 +42,16 @@
         <apex:pageMessages ></apex:pageMessages>
     </apex:outputPanel>
 
-    <apex:pageBlock title="Accounts that match '{!searchStr}'" id="acct">
+    <apex:pageBlock title="Found {!setCtlr.resultSize} Accounts that match '{!searchStr}'" id="acct">
+        <apex:pageBlockButtons >
+            <apex:form >
+        
+            </apex:form>
+        </apex:pageBlockButtons>
+        <apex:form >
+            <apex:commandButton value="Previous" action="{!Previous}"/>
+            <apex:commandButton value="Next" action="{!Next}"/>
+        </apex:form>
         <apex:pageBlockSection title="Select an Account to view Details" columns="2" id="acctList">
             <apex:pageblockTable value="{!accList }" var="acc" rowClasses="tooltip" onRowClick="clickElem(this);">
                 <apex:column headerClass="accId" value="{!acc.Id}" styleClass="accId"/>
@@ -121,7 +130,7 @@
             </apex:column>
             <apex:column headerValue="Payment method" value="{!cas.c2g__PaymentMethod__c}"/>
             <apex:column headerValue="Date" value="{!cas.c2g__Date__c}"/>
-            <apex:column headerValue="Payment" value="{!cas.c2g__NetValue__c}" />
+            <apex:column headerValue="Payment" value="${!cas.c2g__NetValue__c}" />
             <apex:column headerValue="Status" value="{!cas.c2g__Status__c}"/>
         </apex:pageblockTable>
     </apex:pageBlockSection>
