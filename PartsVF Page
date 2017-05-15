@@ -1,0 +1,92 @@
+<apex:page controller="InventoryController">
+   <apex:includeScript value="https://code.jquery.com/jquery-3.2.1.min.js"  />
+    <style>
+        /* Hide the Id column */
+        .invId{
+        display: none;
+        }
+    </style>
+    <script type="text/javascript">
+    $j = jQuery.noConflict();
+
+    // Click Search button when enter is pressed
+    $j(document).ready(function(){
+        $j(document).on("keypress", ".inputSearch", function(event){
+            if(event.keyCode == 13){
+                $j(".btnSearch").click();
+                return false;
+            }
+        });
+    });
+
+    // Call the actionFunction when a record is selected
+    function clickElem(elem){
+        var id = $j(elem).find(".invId").text();
+        console.log(id);
+        getRelatedInfo(id);
+    }
+    </script>
+  <apex:form >
+  <apex:inputText value="{!searchStr}"/>
+    <apex:commandButton value="Search Inventory" action="{!soslDemo_method}" reRender="acct,error,Loc,inv,itm,soi,poi" status="actStatusId"/>
+    <apex:actionStatus id="actStatusId">
+                <apex:facet name="start" >
+                    <img src="/img/loading.gif"/>
+                </apex:facet>
+    </apex:actionStatus>
+        <apex:actionFunction name="getRelatedInfo" action="{!relatedInfo}" reRender="details,soi,invo,poi" status="actStatusId">
+            <apex:param name="invId" assignTo="{!selectedItemId}" value=""/>
+        </apex:actionFunction>
+  </apex:form>
+
+    <apex:outputPanel title="" id="error">
+     <apex:pageMessages ></apex:pageMessages>
+     </apex:outputPanel>
+
+    <apex:pageBlock title="Inventory Items" id="inv">
+    <apex:pageblockTable value="{!inventoryList }" var="inv" onRowClick="clickElem(this);">
+          <apex:column headerClass="invId" value="{!inv.Id}" styleClass="invId"/>
+          <apex:column value="{!inv.rstk__icitem_descr__c}"/>
+          <apex:column value="{!inv.rstk__icitem_div__c}"/>
+          <apex:column value="{!inv.rstk__rollsumm_totalqty__c}"/>
+          <apex:column value="{!inv.rstk__icitem_item__r.rstk__formula_item__c}"/>
+       </apex:pageblockTable>
+    </apex:pageBlock>
+
+ <apex:pageBlock title="Quantity on Hand " id="invo">
+    <apex:pageblockTable value="{!itemList}" var="itm">
+      <apex:column value="{!itm.name}"/>
+      <apex:column value="{!itm.rstk__iclocitem_locid__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_locnum__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_locqty__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_icitem__c}"/>
+ </apex:pageblockTable>
+ </apex:pageBlock>
+
+ <apex:pageBlock title="Sales Orders with Items" id="soi">
+    <apex:pageblockTable value="{!SOitemList}" var="soi">
+      <apex:column value="{!soi.rstk__soline_sohdr__c}"/>
+      <apex:column value="{!soi.rstk__soline_sohdr__r.rstk__sohdr_custno__c}"/>
+      <apex:column value="{!soi.rstk__soline_duedate__c}"/>
+      <apex:column value="{!soi.rstk__soline_icitem__c}"/>
+      <apex:column value="{!soi.rstk__soline_qtyorder__c}"/>
+      <apex:column value="{!soi.rstk__soline_price__c}"/>
+      <apex:column value="{!soi.rstk__soline_shipdiv__c}"/>
+      
+ </apex:pageblockTable>
+ </apex:pageBlock>
+
+    <apex:pageBlock title="Purchase Orders with Items" id="poi">
+    <apex:pageblockTable value="{!POitemList}" var="poi">
+      <apex:column value="{!poi.rstk__poline_ordno__c}"/>
+       <apex:column value="{!poi.rstk__poline_duedte__c}"/>
+      <apex:column value="{!poi.rstk__poline_qtyreq__c}"/>
+      <apex:column value="{!poi.rstk__poline_unitprice__c}"/>
+      <apex:column value="{!poi.rstk__poline_div__c}"/>
+      <apex:column value="{!poi.rstk__poline_longdescr__c}"/>
+    
+ 
+ 
+ </apex:pageblockTable>
+ </apex:pageBlock>
+</apex:page>
