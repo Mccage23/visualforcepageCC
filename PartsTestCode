@@ -1,0 +1,45 @@
+@isTest
+private class InventoryControllerTest {
+
+	@isTest(SeeAllData=true) static void test_method_one() {
+
+		InventoryController controller = new InventoryController();
+
+		controller.searchStr = 'THERMOSTAT';
+		controller.soslDemo_method();
+
+		List<rstk__icitem__c> parts = controller.inventoryList;
+
+		controller.selecteditemId = 'a5z360000004IiCAAU';
+
+		controller.relatedInfo();
+
+		if(controller.itemList.size() > 0){
+			System.assertEquals(controller.showitemsList, true);
+		}
+		else{
+			System.assertEquals(controller.showitemsList, false);
+		}
+
+		if(controller.SOitemList.size() > 0){
+			System.assertEquals(controller.showSOitemList, true);
+		}
+		else{
+			System.assertEquals(controller.showSOitemList, false);
+		}
+
+		if(controller.POitemList.size() > 0){
+			System.assertEquals(controller.showPOitemList, true);
+		}
+		else{
+			System.assertEquals(controller.showPOitemList, false);
+		}
+
+		
+		}
+
+
+	@isTest static void test_method_two() {
+		// Implement test code
+	}
+}
