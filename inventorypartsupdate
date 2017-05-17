@@ -1,0 +1,70 @@
+@isTest
+private class CustomerServicePageControllerTest {
+
+	@isTest(SeeAllData=true) static void test_method_one() {
+
+		CustomerServicePageController controller = new CustomerServicePageController();
+
+		controller.searchStr = 'Regal';
+		controller.Search();
+
+		controller.previous();
+		controller.next();
+		integer pageNumber = controller.pageNumber;
+		boolean hasNext = controller.hasNext;
+		boolean hasPrevious = controller.hasPrevious;
+
+		List<rstk__socust__c> accounts = controller.accList;
+
+		controller.selectedCustomerId = 'a9w36000000GnJX';
+
+		controller.orderDetails();
+
+		if(controller.InvoiceO.size() > 0){
+			System.assertEquals(controller.showInvoices, true);
+		}
+		else{
+			System.assertEquals(controller.showInvoices, false);
+		}
+
+		if(controller.relatedOrders.size() > 0){
+			System.assertEquals(controller.showOrders, true);
+		}
+		else{
+			System.assertEquals(controller.showOrders, false);
+		}
+
+		if(controller.SOship.size() > 0){
+			System.assertEquals(controller.showShipping, true);
+		}
+		else{
+			System.assertEquals(controller.showShipping, false);
+		}
+
+		if(controller.RMAList.size() > 0){
+			System.assertEquals(controller.showRMA, true);
+		}
+		else{
+			System.assertEquals(controller.showRMA, false);
+		}
+
+		if(controller.CashList.size() > 0){
+			System.assertEquals(controller.showCash, true);
+		}
+		else{
+			System.assertEquals(controller.showCash, false);
+		}
+
+		if(controller.FFSalesinvoice.size() > 0){
+			System.assertEquals(controller.showFFsales, true);
+		}
+		else{
+			System.assertEquals(controller.showFFsales, false);
+		}
+
+	}
+
+	@isTest static void test_method_two() {
+		// Implement test code
+	}
+}
