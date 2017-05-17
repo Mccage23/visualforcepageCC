@@ -1,0 +1,272 @@
+@IsTest(SeeAllData=true)
+public class ARbalanceTEST {
+    private static testMethod void CreateDummyCashEntry(){
+        String coId = 'a1m36000000cvARAAY';
+        UpdateARBalance UAR = new UpdateARBalance(coId, null);
+        UAR.getARBalances(coId, null);
+    Database.executeBatch(UAR);
+        system.assert(true);
+    }
+    
+
+    private static testMethod void ExecuteDBEntry()
+    {
+    
+       Test.StartTest();
+       String coId = 'a3236000000j9jUAAQ';
+       String AcId= '0013600000I6q4nAAB';
+       
+       UpdateARBalance objUpdateARB = new UpdateARBalance(coId, AcId);
+       ID batchprocessid = Database.executeBatch(objUpdateARB);
+       Test.StopTest();
+    
+    }
+    Private static testMethod void CreatingDummyValues()
+    {
+       // Creates the dummy customer company 
+    rstk__sycmp__c company= new rstk__sycmp__c(); 
+    List<rstk__sycmp__c> comp =new list<rstk__sycmp__c>();
+    company.rstk__sycmp_cmpno__c='BTN'; 
+    company.rstk__sycmp_descr__c='Ballantyne Strong, Inc. inc'; 
+    comp.add(company); 
+    
+        try { 
+           insert comp;            
+           System.assert(false, 'This should never be done');
+        } catch ( Exception ex) {
+            System.assert(true, 'This should evaluate to true.'); 
+            System.debug('Code Added!');
+            System.debug(ex.getMessage() ); 
+            System.debug(ex.getStackTraceString() );
+        }
+        
+        //create a dummy bank account
+        c2g__codaBankAccount__c BA = new c2g__codaBankAccount__c(); 
+        list<c2g__codaBankAccount__c> BankAccount= new list<c2g__codaBankAccount__c>(); 
+        BA.name='test'; 
+        BA.c2g__ReportingCode__c='Test0000'; //has to be a unique field
+        BA.c2g__BankName__c='test';
+        BA.c2g__AccountName__c='test'; 
+        BA.c2g__AccountNumber__c='000000'; 
+        BA.c2g__BankAccountCurrency__c='a1R36000001DFlq'; 
+        BankAccount.add(BA);
+        
+        try { 
+           insert BankAccount;            
+           System.assert(false, 'This should never be done');
+        } catch ( Exception ex) {
+            System.assert(true, 'This should evaluate to true.'); 
+            System.debug('Code Added!');
+            System.debug(ex.getMessage() ); 
+            System.debug(ex.getStackTraceString() );
+        }
+        
+       
+        
+        // create a accounting company
+        c2g__codaCompany__c acccomp= new c2g__codaCompany__c(); 
+        list<c2g__codaCompany__c> AccCompany = new list<c2g__codaCompany__c>(); 
+        acccomp.CurrencyIsoCode='USD';
+        acccomp.name='test company';
+        //acccomp.c2g__BankAccount__c='test'; 
+        acccomp.c2g__BankAccount__c=BA.Id;
+        AccCompany.add(acccomp); 
+        insert AccCompany;
+        
+        
+        // create a dummy salesforce account, add account number, trading currency, address 
+        Account acc= new account(); 
+        List<account> Account= new list<Account>(); 
+        acc.name='test account'; 
+        acc.CurrencyIsoCode='USD'; 
+        acc.rstk__Rootstock_Customer__c=true;
+        acc.AccountNumber='00000123';
+        acc.c2g__CODAAccountTradingCurrency__c='USD'; 
+        acc.Billingcity='test';
+        acc.BillingStreet='000 test street';
+        acc.BillingState='GA';       
+        acc.BillingPostalCode='00000'; 
+        account.add(acc); 
+        
+        try { 
+            insert account;
+            System.assert(false, 'This should never be done');
+        } catch ( Exception ex) {
+            System.assert(true, 'This should evaluate to true.'); 
+            System.debug('Code Added!');
+            System.debug(ex.getMessage() ); 
+            System.debug(ex.getStackTraceString() );
+        }
+        
+        
+        
+        //Create a dummy carrier code
+        //this is created to be able to create customer class. 
+        rstk__sycarrier__c code= new rstk__sycarrier__c(); 
+        list<rstk__sycarrier__c> carcode= new list<rstk__sycarrier__c>(); 
+        code.rstk__sycarrier_id__c='Test'; 
+        code.rstk__sycarrier_descr__c='This is a test Carrier code'; 
+        carcode.add(code); 
+         
+          try { 
+            insert carcode;
+            System.assert(false, 'This should never be done');
+        } catch ( Exception ex) {
+            System.assert(true, 'This should evaluate to true.'); 
+            System.debug('Code Added!');
+            System.debug(ex.getMessage() ); 
+            System.debug(ex.getStackTraceString() );
+        }
+        
+        //Creates a dummy ship method type code
+        //this is created to be able to create a customer class. 
+        rstk__syshipviatype__c SMTC= new rstk__syshipviatype__c(); 
+        List<rstk__syshipviatype__c> ShipCode = new list <rstk__syshipviatype__c>(); 
+        SMTC.rstk__syshipviatype_id__c='test';
+        SMTC.rstk__syshipviatype_descr__c='this is just a test';
+        shipCode.add(SMTC); 
+         
+           try { 
+            Insert shipCode;            
+           System.assert(false, 'This should never be done');
+        } catch ( Exception ex) {
+            System.assert(true, 'This should evaluate to true.'); 
+            System.debug('Code Added!');
+            System.debug(ex.getMessage() ); 
+            System.debug(ex.getStackTraceString() );
+        }
+        
+        //Creates a dummy terms code, this is create to be able to create a customer
+        rstk__syterms__c tc= new rstk__syterms__c(); 
+        list<rstk__syterms__c> termcode= new list<rstk__syterms__c>(); 
+        tc.rstk__syterms_id__c='test'; 
+        tc.rstk__syterms_descr__c='this is just a description';
+        termcode.add(tc); 
+       
+          try { 
+           Insert termcode;            
+           System.assert(false, 'This should never be done');
+        } catch ( Exception ex) {
+            System.assert(true, 'This should evaluate to true.'); 
+            System.debug('Code Added!');
+            System.debug(ex.getMessage() ); 
+            System.debug(ex.getStackTraceString() );
+        }
+
+              
+        //Creates Dummy Fob code, this is create to be able to create a customer
+        rstk__syfob__c FC= new rstk__syfob__c(); 
+        list<rstk__syfob__c> FobCode = new list <rstk__syfob__c>(); 
+        FC.rstk__syfob_id__c='test';
+        FC.rstk__syfob_descr__c='this is just a test';
+        Fobcode.add(fc); 
+        
+         try { 
+           Insert FobCode;            
+           System.assert(false, 'This should never be done');
+        } catch ( Exception ex) {
+            System.assert(true, 'This should evaluate to true.'); 
+            System.debug('Code Added!');
+            System.debug(ex.getMessage() ); 
+            System.debug(ex.getStackTraceString() );
+        } 
+        
+        //Creates dummy Freight term code, this is create to be able to create a customer
+        rstk__syfrghtrm__c FTC= new rstk__syfrghtrm__c(); 
+        list<rstk__syfrghtrm__c> FreightTC = new list <rstk__syfrghtrm__c>(); 
+        FtC.rstk__syfrghtrm_id__c='test';
+        FtC.rstk__syfrghtrm_descr__c='this is just a test';
+        FreightTC.add(ftc); 
+         
+         try { 
+           Insert FreightTC;            
+           System.assert(false, 'This should never be done');
+        } catch ( Exception ex) {
+            System.assert(true, 'This should evaluate to true.'); 
+            System.debug('Code Added!');
+            System.debug(ex.getMessage() ); 
+            System.debug(ex.getStackTraceString() );
+        }
+        
+        
+        //creates dummy customer class 
+        //needed in order to be able to create customer
+        rstk__socclass__c CC= new rstk__socclass__c(); 
+        List<rstk__socclass__c> CustomerClass =new list<rstk__socclass__c>();
+        cc.rstk__socclass_cclass__c='test'; 
+        //cc.rstk__socclass_custcurr__c='USD (US Dollar)'; 
+        cc.rstk__socclass_carrier__c='a9C36000000ClCqEAK'; 
+        cc.rstk__socclass_shipviatype__c='aCa36000000LEo2CAG'; 
+        cc.rstk__socclass_terms__c='aCe360000004CQDCA2'; 
+        cc.rstk__socclass_fob__c='aCB36000000CvV6GAK'; 
+        cc.rstk__socclass_frghtrm__c='aCC360000008dk6GAA';
+        CustomerClass.add(CC);
+        
+        try { 
+           Insert CustomerClass;            
+           System.assert(false, 'This should never be done');
+        } catch ( Exception ex) {
+            System.assert(true, 'This should evaluate to true.'); 
+            System.debug('Code Added!');
+            System.debug(ex.getMessage() ); 
+            System.debug(ex.getStackTraceString() );
+        }
+        
+        //Creates the dummy customer 
+        rstk__socust__c customer = new rstk__socust__c(); 
+        list<rstk__socust__c> cust= new list<rstk__socust__c>(); 
+        // customer.rstk__socust_custno__c=987564; 
+        customer.rstk__socust_cclass__c='a9C36000000ClCqEAK';
+        customer.rstk__socust_terms__c='aCe360000004CQDCA2';
+        customer.rstk__socust_sf_account__c= '001Q0000015yZ1WIAU';
+        customer.rstk__socust_arbalance__c=100000;
+        cust.add(customer); 
+        
+          try { 
+           insert cust;            
+           System.assert(false, 'This should never be done');
+        } catch ( Exception ex) {
+            System.assert(true, 'This should evaluate to true.'); 
+            System.debug('Code Added!');
+            System.debug(ex.getMessage() ); 
+            System.debug(ex.getStackTraceString() );
+        }
+        
+        //Create a dummy period for the cash entry 
+        c2g__codaPeriod__c Per= new c2g__codaPeriod__c(); 
+        list<c2g__codaPeriod__c> Period = new list<c2g__codaPeriod__c>(); 
+        per.c2g__PeriodNumber__c='tst'; 
+        per.c2g__StartDate__c=date.newInstance(2017, 01, 01);
+        per.c2g__EndDate__c=date.newInstance(2017, 12, 31);
+        per.CurrencyIsoCode='test';
+        per.name='test000';
+        
+        //Create a dummy cash entry 
+        //Bank account, date, period cash currency is required feilds, Bank account is a lookup so set it up
+        c2g__codaCashEntry__c CE= new c2g__codaCashEntry__c(); 
+        list<c2g__codaCashEntry__c> CashEnter = new list<c2g__codaCashEntry__c>(); 
+        CE.c2g__BankAccount__c='a1V36000001YOAaEAO';
+        CE.c2g__Date__c= date.newInstance(2017, 12, 12);
+        CE.c2g__Period__c= 'a2h36000000JTTYAA4';
+        CE.c2g__CashEntryCurrency__c='a1R36000001DFmIEAW';
+        Ce.c2g__Account__c='0013600000i9RqFAAU';
+        CE.c2g__Value__c=43354;
+        
+        CashEnter.add(CE);
+        
+         try { 
+           insert CashEnter;            
+           System.assert(false, 'This should  never be done');
+        } catch ( Exception ex) {
+            System.assert(true, 'This should evaluate to true.'); 
+            System.debug('Code Added!');
+            System.debug(ex.getMessage() ); 
+            System.debug(ex.getStackTraceString() );
+        }
+        
+          
+        
+        
+        
+    }
+}
