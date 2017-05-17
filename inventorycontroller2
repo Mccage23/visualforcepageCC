@@ -1,0 +1,238 @@
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+public with sharing class InventoryController{
+
+    public List<rstk__icitem__c> inventoryList {get; set;}
+
+    Public List<Opportunity> optyList {get;set;}
+    Public List<contact> conList{get;set;}
+    Public List<account> accList{get;set;}
+
+    public List<LocationItem> itemList {get; set;}
+    AggregateResult[] itemByLocation;
+
+    public List<rstk__soline__c> SOitemList{get;set;}
+    public List<rstk__poline__c> POitemList{get;set;}
+
+    Public boolean showitemsList{get;set;}
+    Public boolean showSOitemList{get;set;}
+    Public boolean showPOitemList{get;set;}
+
+    Public String selecteditemId{get; set;}
+    Public rstk__peitem__c selecteditem{get;set;}
+    Public String searchStr{get;set;}
+
+    //public List<rstk__peitem__c> inventoryList {get;set;}
+
+    Public InventoryController(){
+    }
+
+
+    public void soslDemo_method(){
+        searchStr = '%' + searchStr + '%';
+        inventoryList = [SELECT Id, rstk__icitem_descr__c, rstk__icitem_div__c,rstk__icitem_icitemcst__r.rstk__icitemcst_qtyoh__c, rstk__icitem_item__r.rstk__formula_item__c FROM rstk__icitem__c WHERE Name LIKE :searchStr LIMIT 10];
+    }
+
+    // Public void soslDemo_method(){
+    //     inventoryList = New list<rstk__icitem__c>();
+    //     itemList = [SELECT Id,Name,rstk__iclocitem_div__c,rstk__iclocitem_icitem__c,rstk__iclocitem_locid__c,rstk__iclocitem_locnum__c,rstk__iclocitem_locqty__c FROM rstk__iclocitem__c WHERE rstk__iclocitem_icitem__c = :selecteditemId LIMIT 10];
+    //     SOitemList = [SELECT Id,Name,rstk__formula_socust__c,rstk__soline_duedate__c,rstk__soline_icitem__c,rstk__soline_price__c,rstk__soline_prod__c,rstk__soline_qtyorder__c,rstk__soline_shipdiv__c,rstk__soline_sohdr__c FROM rstk__soline__c ORDER BY rstk__soline_icitem__c ASC NULLS FIRST LIMIT 20];
+    //     POitemList = [SELECT Id,Name,rstk__poline_div__c,rstk__poline_duedte__c,rstk__poline_longdescr__c,rstk__poline_ordno__c,rstk__poline_qtyreq__c,rstk__poline_unitprice__c FROM rstk__poline__c ORDER BY Name ASC NULLS FIRST LIMIT 20];
+    //     optyList = New List<Opportunity>();
+    //     conList = New List<contact>();
+    //     accList = New List<account>();
+    //     if(searchStr.length() > 1){
+    //         String searchStr1 = '*'+searchStr+'*';
+    //         String searchQuery = 'FIND \'' + searchStr1 + '\' IN ALL FIELDS RETURNING  Account (Id,Name,type),Contact(name,email),Opportunity(name,StageName),rstk__peitem__c(Id,Name,rstk__formula_item__c,rstk__peitem_iccomcod__c,rstk__formula_name__c,rstk__peitem_descr__c,rstk__peitem_src_pl__c,rstk__peitem_invdiv__c,rstk__peitem_storagecode__c )';
+    //         List<List <sObject>> searchList = search.query(searchQuery);
+    //         accList = ((List<Account>)searchList[0]);
+    //         conList  = ((List<contact>)searchList[1]);
+    //         optyList = ((List<Opportunity>)searchList[2]);
+    //         inventoryList = ((List<rstk__peitem__c>)searchList[3]);
+    //
+    //         if(accList.size() == 0 && conList.size() == 0 && optyList.size() == 0){
+    //             apexPages.addmessage(new apexpages.message(apexpages.severihttps://cs3.salesforce.com/a5z360000004Mhtty.Error, 'Sorry, no results returned with matching string..'));
+    //             return;
+    //         }
+    //     }
+    //     else{
+    //         apexPages.addmessage(new apexpages.message(apexpages.severity.Error, 'Please enter at least two characters..'));
+    //         return;
+    //     },
+    // }
+
+    public void relatedInfo(){
+        SOitemList = [SELECT Id,Name,rstk__soline_sohdr__r.rstk__sohdr_custno__c,rstk__soline_project__c,rstk__soline_duedate__c,rstk__soline_icitem__c,rstk__soline_price__c,rstk__soline_prod__c,rstk__soline_qtyorder__c,rstk__soline_shipdiv__c,rstk__soline_sohdr__c,rstk__soline_qtyship__c,rstk__soline_linestatustext__c FROM rstk__soline__c WHERE rstk__soline_icitem__c = :selectedItemId ORDER BY rstk__soline_duedate__c DESC LIMIT 15];
+        //itemList = [SELECT Id,Name,rstk__iclocitem_div__c,rstk__iclocitem_icitem__c,rstk__iclocitem_locid__c,rstk__iclocitem_locnum__c,rstk__iclocitem_locqty__c,rstk__iclocitem_loctype_pl__c FROM rstk__iclocitem__c WHERE rstk__iclocitem_icitem__c = :selecteditemId AND rstk__iclocitem_loctype_pl__c != 'Non-nettable' LIMIT 15];
+        itemByLocation = [SELECT Name,rstk__iclocitem_div__c,rstk__iclocitem_icitem__c,rstk__iclocitem_locid__c,rstk__iclocitem_locnum__c,SUM(rstk__iclocitem_locqty__c) rstk__iclocitem_locqty__c_sum,rstk__iclocitem_loctype_pl__c FROM rstk__iclocitem__c WHERE rstk__iclocitem_icitem__c = :selecteditemId AND rstk__iclocitem_loctype_pl__c != 'Non-nettable' GROUP BY rstk__iclocitem_locnum__c,Name,rstk__iclocitem_div__c,rstk__iclocitem_icitem__c,rstk__iclocitem_locid__c,rstk__iclocitem_loctype_pl__c];
+        if(itemByLocation != null){
+            for(AggregateResult ar : itemByLocation){
+                LocationItem i = new LocationItem(ar);
+                try {
+
+              itemList.add(i);
+
+            }
+            catch (System.NullPointerException e) {
+
+
+
+        }
+
+            }
+        }
+        //POitemList =[SELECT Id,Name,rstk__poline_div__c,rstk__poline_duedte__c,rstk__poline_longdescr__c,rstk__poline_ordno__c,rstk__poline_qtyreq__c,rstk__poline_unitprice__c,rstk__poline_item__c FROM rstk__poline__c WHERE rstk__poline_item__c = :selecteditemId  LIMIT 20];
+        POitemList =[SELECT Id,Name,rstk__poline_div__c,rstk__poline_ordno__r.rstk__pohdr_vendno__c,rstk__poline_duedte__c,rstk__poline_longdescr__c,rstk__poline_ordno__c,rstk__poline_qtyreq__c,rstk__poline_unitprice__c,rstk__poline_item__c, rstk__poline_descr__c FROM rstk__poline__c WHERE rstk__poline_item__r.rstk__poitem_item__c =:selectedItemId ORDER BY rstk__poline_duedte__c DESC LIMIT 15];
+        showitemsList = itemByLocation.size() > 0;
+        showSOitemList =SOitemList.size() > 0;
+        showPOitemList =POitemList.size() > 0;
+    }
+
+    public List<LocationItem> getItemList(){
+        List<LocationItem> items = new List<LocationItem>();
+        if(itemByLocation != null){
+            for(AggregateResult ar : itemByLocation){
+                System.debug(ar.get('name'));
+                items.add(new LocationItem(ar));
+            }
+        }
+        return items;
+    }
+
+    public class LocationItem{
+        public String name {get;set;}
+        public String division {get;set;}
+        public String itemNumber {get;set;}
+        public String locationId {get;set;}
+        public String locationNumber {get;set;}
+        public decimal aggregateQty {get;set;}
+        public String locationType {get;set;}
+
+        public LocationItem(AggregateResult ar){
+            name = (String)ar.get('name');
+            division = (String)ar.get('rstk__iclocitem_div__c');
+            itemNumber = String.valueOf(ar.get('rstk__iclocitem_icitem__c'));
+            locationId = String.valueOf(ar.get('rstk__iclocitem_locid__c'));
+            locationNumber = String.valueOf(ar.get('rstk__iclocitem_locnum__c'));
+            aggregateQty = (Decimal)ar.get('rstk__iclocitem_locqty__c_sum');
+            locationType = String.valueOf(ar.get('rstk__iclocitem_loctype_pl__c'));
+        }
+    }
+}
