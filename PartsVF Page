@@ -27,8 +27,8 @@
     }
     </script>
   <apex:form >
-  <apex:inputText value="{!searchStr}"/>
-    <apex:commandButton value="Search Inventory" action="{!soslDemo_method}" reRender="acct,error,Loc,inv,itm,soi,poi" status="actStatusId"/>
+  <apex:inputText styleClass="inputSearch" value="{!searchStr}"/>
+    <apex:commandButton styleClass="btnSearch" value="Search Inventory" action="{!soslDemo_method}" reRender="inv" status="actStatusId"/>
     <apex:actionStatus id="actStatusId">
                 <apex:facet name="start" >
                     <img src="/img/loading.gif"/>
