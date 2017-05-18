@@ -48,7 +48,7 @@
           <apex:column headerClass="invId" value="{!inv.Id}" styleClass="invId"/>
           <apex:column value="{!inv.rstk__icitem_descr__c}"/>
           <apex:column value="{!inv.rstk__icitem_div__c}"/>
-          <apex:column value="{!inv.rstk__rollsumm_totalqty__c}"/>
+          <apex:column value="{!inv.rstk__icitem_icitemcst__r.rstk__icitemcst_qtyoh__c}"/>
           <apex:column value="{!inv.rstk__icitem_item__r.rstk__formula_item__c}"/>
        </apex:pageblockTable>
     </apex:pageBlock>
@@ -56,10 +56,12 @@
  <apex:pageBlock title="Quantity on Hand " id="invo">
     <apex:pageblockTable value="{!itemList}" var="itm">
       <apex:column value="{!itm.name}"/>
-      <apex:column value="{!itm.rstk__iclocitem_locid__c}"/>
-      <apex:column value="{!itm.rstk__iclocitem_locnum__c}"/>
-      <apex:column value="{!itm.rstk__iclocitem_locqty__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_div__c}"/>
       <apex:column value="{!itm.rstk__iclocitem_icitem__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_locid__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_locqty__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_locnum__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_loctype_pl__c}"/>
  </apex:pageblockTable>
  </apex:pageBlock>
 
@@ -71,22 +73,24 @@
       <apex:column value="{!soi.rstk__soline_icitem__c}"/>
       <apex:column value="{!soi.rstk__soline_qtyorder__c}"/>
       <apex:column value="{!soi.rstk__soline_price__c}"/>
-      <apex:column value="{!soi.rstk__soline_shipdiv__c}"/>
-      
+      <apex:column value="{!soi.rstk__soline_qtyship__c}"/>
+      <apex:column value="{!soi.rstk__soline_linestatustext__c}"/>
+
  </apex:pageblockTable>
  </apex:pageBlock>
 
     <apex:pageBlock title="Purchase Orders with Items" id="poi">
     <apex:pageblockTable value="{!POitemList}" var="poi">
       <apex:column value="{!poi.rstk__poline_ordno__c}"/>
+      <apex:column value="{!poi.rstk__poline_ordno__r.rstk__pohdr_vendno__c}"/>
        <apex:column value="{!poi.rstk__poline_duedte__c}"/>
       <apex:column value="{!poi.rstk__poline_qtyreq__c}"/>
       <apex:column value="{!poi.rstk__poline_unitprice__c}"/>
       <apex:column value="{!poi.rstk__poline_div__c}"/>
       <apex:column value="{!poi.rstk__poline_longdescr__c}"/>
-    
- 
- 
+
+
+
  </apex:pageblockTable>
  </apex:pageBlock>
 </apex:page>
