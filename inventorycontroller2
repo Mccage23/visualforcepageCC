@@ -1,13 +1,8 @@
-
 public with sharing class InventoryController{
 
     public List<rstk__icitem__c> inventoryList {get; set;}
 
-    Public List<Opportunity> optyList {get;set;}
-    Public List<contact> conList{get;set;}
-    Public List<account> accList{get;set;}
-
-    public List<LocationItem> itemList {get; set;}
+    public List<rstk__iclocitem__c> itemList {get; set;}
     AggregateResult[] itemByLocation;
 
     public List<rstk__soline__c> SOitemList{get;set;}
@@ -63,22 +58,30 @@ public with sharing class InventoryController{
     public void relatedInfo(){
         SOitemList = [SELECT Id,Name,rstk__soline_sohdr__r.rstk__sohdr_custno__c,rstk__soline_project__c,rstk__soline_duedate__c,rstk__soline_icitem__c,rstk__soline_price__c,rstk__soline_prod__c,rstk__soline_qtyorder__c,rstk__soline_shipdiv__c,rstk__soline_sohdr__c,rstk__soline_qtyship__c,rstk__soline_linestatustext__c FROM rstk__soline__c WHERE rstk__soline_icitem__c = :selectedItemId ORDER BY rstk__soline_duedate__c DESC LIMIT 15];
         //itemList = [SELECT Id,Name,rstk__iclocitem_div__c,rstk__iclocitem_icitem__c,rstk__iclocitem_locid__c,rstk__iclocitem_locnum__c,rstk__iclocitem_locqty__c,rstk__iclocitem_loctype_pl__c FROM rstk__iclocitem__c WHERE rstk__iclocitem_icitem__c = :selecteditemId AND rstk__iclocitem_loctype_pl__c != 'Non-nettable' LIMIT 15];
+        itemList = new List<rstk__iclocitem__c>();
         itemByLocation = [SELECT Name,rstk__iclocitem_div__c,rstk__iclocitem_icitem__c,rstk__iclocitem_locid__c,rstk__iclocitem_locnum__c,SUM(rstk__iclocitem_locqty__c) rstk__iclocitem_locqty__c_sum,rstk__iclocitem_loctype_pl__c FROM rstk__iclocitem__c WHERE rstk__iclocitem_icitem__c = :selecteditemId AND rstk__iclocitem_loctype_pl__c != 'Non-nettable' GROUP BY rstk__iclocitem_locnum__c,Name,rstk__iclocitem_div__c,rstk__iclocitem_icitem__c,rstk__iclocitem_locid__c,rstk__iclocitem_loctype_pl__c];
+        System.debug('ItemByLocation ' + itemByLocation.size());
         if(itemByLocation != null){
             for(AggregateResult ar : itemByLocation){
-                LocationItem i = new LocationItem(ar);
+                //LocationItem i = new LocationItem(ar);
+                rstk__iclocitem__c item = itemFromAr(ar);
+
+                System.debug(item.name);
+                System.debug(item.rstk__iclocitem_locqty__c);
+
                 try {
 
-              itemList.add(i);
+                    //itemList.add(i);
+                    itemList.add(item);
+                    //itemFromAr(item);
+
+                }
+                catch (System.NullPointerException e) {
+                    System.debug(e);
+                }
 
             }
-            catch (System.NullPointerException e) {
 
-
-
-        }
-
-            }
         }
         //POitemList =[SELECT Id,Name,rstk__poline_div__c,rstk__poline_duedte__c,rstk__poline_longdescr__c,rstk__poline_ordno__c,rstk__poline_qtyreq__c,rstk__poline_unitprice__c,rstk__poline_item__c FROM rstk__poline__c WHERE rstk__poline_item__c = :selecteditemId  LIMIT 20];
         POitemList =[SELECT Id,Name,rstk__poline_div__c,rstk__poline_ordno__r.rstk__pohdr_vendno__c,rstk__poline_duedte__c,rstk__poline_longdescr__c,rstk__poline_ordno__c,rstk__poline_qtyreq__c,rstk__poline_unitprice__c,rstk__poline_item__c, rstk__poline_descr__c FROM rstk__poline__c WHERE rstk__poline_item__r.rstk__poitem_item__c =:selectedItemId ORDER BY rstk__poline_duedte__c DESC LIMIT 15];
@@ -87,34 +90,26 @@ public with sharing class InventoryController{
         showPOitemList =POitemList.size() > 0;
     }
 
-    public List<LocationItem> getItemList(){
-        List<LocationItem> items = new List<LocationItem>();
-        if(itemByLocation != null){
-            for(AggregateResult ar : itemByLocation){
-                System.debug(ar.get('name'));
-                items.add(new LocationItem(ar));
-            }
-        }
-        return items;
-    }
+    // public List<LocationItem> getItemList(){
+    //     List<LocationItem> items = new List<LocationItem>();
+    //     if(itemByLocation != null){
+    //         for(AggregateResult ar : itemByLocation){
+    //             System.debug(ar.get('name') + ' ' + ar.get('rstk__iclocitem_locqty__c_sum'));
+    //             items.add(new LocationItem(ar));
+    //         }
+    //     }
+    //     return items;
+    // }
 
-    public class LocationItem{
-        public String name {get;set;}
-        public String division {get;set;}
-        public String itemNumber {get;set;}
-        public String locationId {get;set;}
-        public String locationNumber {get;set;}
-        public decimal aggregateQty {get;set;}
-        public String locationType {get;set;}
-
-        public LocationItem(AggregateResult ar){
-            name = (String)ar.get('name');
-            division = (String)ar.get('rstk__iclocitem_div__c');
-            itemNumber = String.valueOf(ar.get('rstk__iclocitem_icitem__c'));
-            locationId = String.valueOf(ar.get('rstk__iclocitem_locid__c'));
-            locationNumber = String.valueOf(ar.get('rstk__iclocitem_locnum__c'));
-            aggregateQty = (Decimal)ar.get('rstk__iclocitem_locqty__c_sum');
-            locationType = String.valueOf(ar.get('rstk__iclocitem_loctype_pl__c'));
-        }
+    public rstk__iclocitem__c itemFromAr(AggregateResult ar){
+        rstk__iclocitem__c item = new rstk__iclocitem__c();
+        item.name = (String)ar.get('name');
+        item.rstk__iclocitem_div__c = (String)ar.get('rstk__iclocitem_div__c');
+        item.rstk__iclocitem_icitem__c = (String)ar.get('rstk__iclocitem_icitem__c');
+        item.rstk__iclocitem_locid__c = (String)ar.get('rstk__iclocitem_locid__c');
+        item.rstk__iclocitem_locnum__c = (String)ar.get('rstk__iclocitem_locnum__c');
+        item.rstk__iclocitem_locqty__c = (Decimal)ar.get('rstk__iclocitem_locqty__c_sum');
+        item.rstk__iclocitem_loctype_pl__c = (String)ar.get('rstk__iclocitem_loctype_pl__c');
+        return item;
     }
 }
