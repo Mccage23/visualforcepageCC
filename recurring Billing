@@ -1,0 +1,47 @@
+<br />
+<!-- ******************** START RELATED LIST SECTION UNIQUEID:530********************-->
+<style type="text/css">
+table.table530 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table530header {text-align:center;font-weight:bold;border:solid black 1px;color:#FFFFFF;background-color:#000000;}
+.table530footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table530RowEven{border:solid black 1px;}
+.table530RowOdd{background-color:#cdcdcd;background-color:#a8a8a8;border:solid black 1px;}
+.table530col0{border:solid black 1px;text-align:left;}
+.table530col1{border:solid black 1px;text-align:left;}
+.table530col2{border:solid black 1px;text-align:left;}
+.table530col3{border:solid black 1px;text-align:left;}
+.table530col4{border:solid black 1px;text-align:left;}
+.table530col5{border:solid black 1px;text-align:left;}
+.table530col6{border:solid black 1px;text-align:left;}
+.table530col7{border:solid black 1px;text-align:left;}
+.table530col8{border:solid black 1px;text-align:left;}
+.table530col9{border:solid black 1px;text-align:left;}
+</style>
+<table class="table530"><tr><th  class="table530header">rstk soinv invoice</th>
+<th  class="table530header">rstk soinv invdate</th>
+<th  class="table530header">rstk soinv grandtotal</th>
+<th  class="table530header">rstk  soinv duedate</th>
+<th  class="table530header">rstk  soinv name</th>
+<th  class="table530header">rstk soinv address1</th>
+<th  class="table530header">rstk soinv city</th>
+<th  class="table530header">rstk soinv state</th>
+<th  class="table530header">rstk  soinv phone</th>
+<th  class="table530header">rstk  soinv zip</th>
+</tr>
+<!--{{!
+<lineitems><class>table530</class>
+<listname>rstk__soconpbills__r</listname>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_invoice__c</column>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_invdate__c</column>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_grandtotal__c</column>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_duedate__c</column>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_name__c</column>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_address1__c</column>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_city__c</column>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_state__c</column>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_phone__c</column>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_zip__c</column>
+</lineitems>
+}}--></table>
+<!-- ******************** END RELATED LIST SECTION UNIQUEID:530********************-->
+ <br />
