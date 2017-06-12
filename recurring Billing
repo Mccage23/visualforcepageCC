@@ -43,5 +43,34 @@ table.table530 {border:solid black 1px; border-collapse:collapse; border-spacing
 <column>rstk__soconpbill_soinv__r.rstk__soinv_zip__c</column>
 </lineitems>
 }}--></table>
+<br />
+<!-- ******************** START RELATED LIST SECTION UNIQUEID:500********************-->
+<style type="text/css">
+table.table500 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table500header {text-align:center;font-weight:bold;border:solid black 1px;color:#FFFFFF;background-color:#000000;}
+.table500footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table500RowEven{border:solid black 1px;}
+.table500RowOdd{background-color:#cdcdcd;background-color:#a8a8a8;border:solid black 1px;}
+.table500col0{border:solid black 1px;text-align:left;}
+.table500col1{border:solid black 1px;text-align:left;}
+.table500col2{border:solid black 1px;text-align:left;}
+.table500col3{border:solid black 1px;text-align:left;}
+</style>
+<table class="table500"><tr><th  class="table500header">Recurring Charge Nmae</th>
+<th  class="table500header">Product</th>
+<th  class="table500header">Period</th>
+<th  class="table500header">Cost</th>
+</tr>
+<!--{{!
+<lineitems><class>table500</class>
+<listname>rstk__soconrcs__r</listname>
+<column>name</column>
+<column>rstk__soconrc_devsoprod__r.name</column>
+<column>rstk__soconrc_priceuom__c</column>
+<column>rstk__soconrc_price__c</column>
+</lineitems>
+}}--></table>
+<!-- ******************** END RELATED LIST SECTION UNIQUEID:500********************-->
+ <br />
 <!-- ******************** END RELATED LIST SECTION UNIQUEID:530********************-->
  <br />
