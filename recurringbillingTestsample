@@ -1,0 +1,433 @@
+<div style="text-align: center;"><span style="font-size:26px;"></span></div>
+
+<div style="text-align:center"><img alt="" height="63" src="/servlet/servlet.ImageServer?id=01536000002dxcGAAQ&amp;oid=00Dn000000093oREAQ" width="400" /></div>
+
+<div style="text-align: center;"><span style="font-size:26px;"></span><br />
+<span style="font-size:24px;">RECURRING BILLING STATEMENT&nbsp;</span><br />
+<br />
+<span style="font-size:18px;">{{!rstk__socontract__c.rstk__socontract_desc__c}}<br />
+<span style="line-height:4;"></span></span></div>
+
+<div style="text-align: right;"> </div>
+
+<div style="text-align: right;"><span style="line-height:3;"></span></div>
+
+<div><strong>Customer: </strong>{{!rstk__socontract__c.rstk__socontract_socust__r.name}}<br />
+<strong>Billing&nbsp;Dates:</strong>&nbsp;{{!rstk__socontract__c.rstk__socontract_rcbstart__c M/d/yy}} -&nbsp;{{!rstk__socontract__c.rstk__socontract_rcblastthru__c M/d/yy}}<br />
+<strong>Payment Terms:</strong>&nbsp;{{!rstk__socontract__c.rstk__socontract_rcbfreq__c}}<br />
+<strong>Contract Terms:</strong> {{!rstk__socontract__c.rstk__socontract_term__c #,###}}<br />
+<strong>Account Status</strong>: {{!rstk__socontract__c.rstk__socontract_constatus__c}}<br />
+<strong>Terms: &nbsp;</strong>{{!rstk__socontract__c.rstk__socontract_socust__r.rstk__socust_terms__r.rstk__syterms_descr__c}}<br />
+<br />
+<strong>BILL TO:</strong><br />
+{{!rstk__socontract__c.rstk__socontract_btaddr__r.rstk__socaddr_name__c}}<br />
+{{!rstk__socontract__c.rstk__socontract_btaddr__r.rstk__socaddr_address1__c}}<br />
+{{!rstk__socontract__c.rstk__socontract_btaddr__r.rstk__socaddr_city__c}} {{!rstk__socontract__c.rstk__socontract_btaddr__r.rstk__socaddr_state__c}}, {{!rstk__socontract__c.rstk__socontract_btaddr__r.rstk__socaddr_zip__c}}<br />
+&nbsp;{{!rstk__socontract__c.rstk__socontract_btaddr__r.rstk__socaddr_phone__c}}</div>
+
+<div><span style="line-height:1;"></span></div>
+
+<div style="text-align: center;">
+<table align="center" border="1" cellpadding="1" cellspacing="1" style="width: 1000px;" summary="SUMMARY OF INVOICE">
+	<caption><span style="font-size:18px;"><strong>SUMMARY OF INVOICE</strong></span></caption>
+	<tbody>
+		<tr>
+			<td style="background-color: rgb(0, 0, 0);"> </td>
+		</tr>
+	</tbody>
+</table>
+<br />
+<!-- ******************** START RELATED LIST SECTION UNIQUEID:244********************-->
+<style type="text/css">table.table244 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table244header {text-align:center;font-weight:bold;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table244footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table244RowEven{}
+.table244RowOdd{background-color:#cdcdcd;}
+.table244col0{text-align:center;}
+.table244col1{text-align:center;}
+.table244col2{text-align:center;}
+.table244col3{text-align:center;}
+</style>
+<table class="table244">
+	<tbody>
+		<tr>
+			<th class="table244header">Invoice Number</th>
+			<th class="table244header">Invoice Date</th>
+			<th class="table244header">Invoice Due Date</th>
+			<th class="table244header">Invoice Total</th>
+		</tr>
+		<!--{{!
+<lineitems><class>table244</class>
+<listname>rstk__soconpbills__r</listname>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_invoiceno__c</column>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_invdate__c</column>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_duedate__c</column>
+<column format-number="#,###.##" prefix="$">rstk__soconpbill_soinv__r.rstk__soinv_grandtotal__c</column>
+</lineitems>
+}}-->
+	</tbody>
+</table>
+<!-- ******************** END RELATED LIST SECTION UNIQUEID:244********************-->
+
+<div style="text-align: right;"> </div>
+
+<div><span style="line-height:3;"></span></div>
+<span style="font-size:18px;"><br />
+<font face="Arial, Helvetica, sans-serif"><b>RECURRING CHARGE DETAIL</b></font></span><br />
+<!-- ******************** START RELATED LIST SECTION UNIQUEID:215********************-->
+<style type="text/css">table.table215 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table215header {text-align:center;font-weight:bold;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table215footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table215RowEven{}
+.table215RowOdd{background-color:#cdcdcd;}
+.table215col0{text-align:left;}
+.table215col1{text-align:left;}
+.table215col2{text-align:center;}
+.table215col3{text-align:center;}
+</style>
+<table class="table215">
+	<tbody>
+		<tr>
+			<th class="table215header">Service</th>
+			<th class="table215header">Product</th>
+			<th class="table215header">Terms</th>
+			<th class="table215header">Price</th>
+		</tr>
+		<!--{{!
+<lineitems><class>table215</class>
+<listname>rstk__soconrcs__r</listname>
+<column>name</column>
+<column>rstk__soconrc_devsoprod__r.name</column>
+<column>rstk__soconrc_priceuom__c</column>
+<column format-number="#,###.##" prefix="$">rstk__soconrc_price__c</column>
+</lineitems>
+}}-->
+	</tbody>
+</table>
+
+<div><span style="font-size:18px;"><br />
+<strong>DEVICE DETAILS</strong></span>
+
+<div> </div>
+</div>
+<!-- ******************** START RELATED LIST SECTION UNIQUEID:783********************-->
+<style type="text/css">table.table783 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table783header {text-align:center;font-weight:bold;border:solid black 1px;color:#FFFFFF;background-color:#000000;}
+.table783footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table783RowEven{border:solid black 1px;}
+.table783RowOdd{background-color:#cdcdcd;background-color:#a8a8a8;border:solid black 1px;}
+.table783col0{border:solid black 1px;text-align:left;}
+.table783col1{border:solid black 1px;text-align:left;}
+.table783col2{border:solid black 1px;text-align:left;}
+.table783col3{border:solid black 1px;text-align:left;}
+</style>
+<table class="table783">
+	<tbody>
+		<tr>
+			<th class="table783header" style="text-align: left;">Location</th>
+			<th class="table783header"> </th>
+			<th class="table783header"> </th>
+			<th class="table783header"> </th>
+		</tr>
+		<!--{{!
+<lineitemsSOQL><class>table783</class>
+<soql>
+select rstk__sowarr_installaddr__r.rstk__socaddr_name__c Site,rstk__sowarr_soprod__r.name prod,AVG(rstk__sowarr_soline__r.rstk__soline_qtyorder__c) QTY, sum(rstk__sowarr_soline__r.rstk__soline_price__c) sump
+from rstk__sowarr__c where rstk__sowarr_socontract__c='{!rstk__socontract__c.id}'
+Group by rstk__sowarr_installaddr__r.rstk__socaddr_name__c,rstk__sowarr_soprod__r.name
+</soql>
+<column>Site</column>
+<column>prod</column>
+<column>QTY</column>
+<column>sump</column>
+</lineitemsSOQL>
+}}-->
+	</tbody>
+</table>
+
+<div style="text-align: left;"><br />
+<!-- ******************** START RELATED LIST SECTION UNIQUEID:925********************-->
+<style type="text/css">table.table925 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table925header {text-align:center;font-weight:bold;border:solid black 1px;color:#FFFFFF;background-color:#000000;}
+.table925footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table925RowEven{border:solid black 1px;}
+.table925RowOdd{background-color:#cdcdcd;background-color:#a8a8a8;border:solid black 1px;}
+.table925col0{border:solid black 1px;text-align:left;}
+.table925col1{border:solid black 1px;text-align:left;}
+</style>
+</div>
+
+<div style="text-align: right;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Invoice Total</div>
+<!-- ******************** START RELATED LIST SECTION UNIQUEID:266********************-->
+<style type="text/css">table.table266 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table266header {text-align:center;font-weight:bold;border:solid black 1px;color:#FFFFFF;background-color:#000000;}
+.table266footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table266RowEven{border-top:solid black 1px;border-bottom:solid black 1px;}
+.table266RowOdd{border-top:solid black 1px;border-bottom:solid black 1px;}
+.table266col0{border-top:solid black 1px;border-bottom:solid black 1px;border-left:solid black 1px;text-align:left;}
+.table266col1{border-top:solid black 1px;border-bottom:solid black 1px;border-right:solid black 1px;text-align:right;}
+</style>
+<table class="table266">
+	<tbody>
+		<tr>
+			<th class="table266header"> </th>
+			<th class="table266header"> </th>
+		</tr>
+		<!--{{!
+<lineitems><class>table266</class>
+<listname>rstk__soconpbills__r</listname>
+<column>rstk__soconpbill_soinv__r.rstk__soinv_name__c</column>
+<column format-number="#,###.##" prefix="$">rstk__soconpbill_soinv__r.rstk__soinv_grandtotal__c</column>
+</lineitems>
+}}-->
+	</tbody>
+</table>
+<!-- ******************** END RELATED LIST SECTION UNIQUEID:266********************--><br />
+<br />
+<br />
+<br />
+<strong><span style="font-size:16px;">Devices are Listed above by Location<br />
+The Final Invoice total reflects a per Product Service Charge.</span></strong><br />
+<!-- ******************** END RELATED LIST SECTION UNIQUEID:416********************--></div>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table253 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table253header {text-align:center;font-weight:bold;border:solid black 1px;color:#FFFFFF;background-color:#000000;}
+.table253footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table253RowEven{border:solid black 1px;}
+.table253RowOdd{background-color:#cdcdcd;background-color:#a8a8a8;border:solid black 1px;}
+.table253col0{border:solid black 1px;text-align:left;}
+.table253col1{border:solid black 1px;text-align:left;}
+.table253col2{border:solid black 1px;text-align:left;}
+.table253col3{border:solid black 1px;text-align:left;}
+.table253col4{border:solid black 1px;text-align:left;}
+.table253col5{border:solid black 1px;text-align:left;}
+.table253col6{border:solid black 1px;text-align:left;}
+.table253col7{border:solid black 1px;text-align:left;}
+.table253col8{border:solid black 1px;text-align:left;}
+.table253col9{border:solid black 1px;text-align:left;}
+.table253col10{border:solid black 1px;text-align:left;}
+.table253col11{border:solid black 1px;text-align:left;}
+.table253col12{border:solid black 1px;text-align:left;}
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table71 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table71header {text-align:center;font-weight:bold;border:solid black 1px;color:#FFFFFF;background-color:#000000;}
+.table71footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table71RowEven{border:solid black 1px;}
+.table71RowOdd{background-color:#cdcdcd;background-color:#a8a8a8;border:solid black 1px;}
+.table71col0{border:solid black 1px;text-align:left;}
+.table71col1{border:solid black 1px;text-align:left;}
+.table71col2{border:solid black 1px;text-align:left;}
+.table71col3{border:solid black 1px;text-align:left;}
+.table71col4{border:solid black 1px;text-align:left;}
+.table71col5{border:solid black 1px;text-align:left;}
+.table71col6{border:solid black 1px;text-align:left;}
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table303 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table303header {text-align:center;font-weight:bold;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table303footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table303RowEven{}
+.table303RowOdd{background-color:#cdcdcd;}
+.table303col0{text-align:left;}
+.table303col1{text-align:left;}
+.table303col2{text-align:left;}
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table453 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table453header {text-align:center;font-weight:bold;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table453footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table453RowEven{}
+.table453RowOdd{background-color:#cdcdcd;}
+.table453col0{text-align:left;}
+.table453col1{text-align:left;}
+.table453col2{text-align:left;}
+.table453col3{text-align:left;}
+.table453col4{text-align:left;}
+.table453col5{text-align:left;}
+</style>
+<style type="text/css">table.table602 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table602header {text-align:center;font-weight:bold;color:#FFFFFF;background-color:#000000;}
+.table602footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table602RowEven{background-color:#a7a7a7;}
+.table602RowOdd{background-color:#dadada;}
+.table602col0{border:solid white 1px;text-align:left;}
+</style>
+<style type="text/css">table.table856 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table856header {text-align:center;font-weight:bold;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table856footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table856RowEven{}
+.table856RowOdd{background-color:#cdcdcd;}
+.table856col0{text-align:left;}
+.table856col1{text-align:left;}
+.table856col2{text-align:left;}
+.table856col3{text-align:left;}
+.table856col4{text-align:left;}
+</style>
+<style type="text/css">table.table279 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table279header {text-align:center;font-weight:bold;border:solid black 1px;color:#FFFFFF;background-color:#000000;}
+.table279footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table279RowEven{border:solid black 1px;}
+.table279RowOdd{background-color:#cdcdcd;background-color:#a8a8a8;border:solid black 1px;}
+.table279col0{border:solid black 1px;text-align:left;}
+.table279col1{border:solid black 1px;text-align:left;}
+.table279col2{border:solid black 1px;text-align:left;}
+.table279col3{border:solid black 1px;text-align:left;}
+.table279col4{border:solid black 1px;text-align:left;}
+.table279col5{border:solid black 1px;text-align:left;}
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table838 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table838header {text-align:center;font-weight:bold;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table838footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table838RowEven{}
+.table838RowOdd{background-color:#cdcdcd;}
+.table838col0{text-align:left;}
+.table838col1{text-align:left;}
+.table838col2{text-align:left;}
+.table838col3{text-align:left;}
+.table838col4{text-align:left;}
+.table838col5{text-align:left;}
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table416 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table416header {text-align:center;font-weight:bold;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table416footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table416RowEven{}
+.table416RowOdd{background-color:#cdcdcd;}
+.table416col0{text-align:left;}
+.table416col1{text-align:left;}
+.table416col2{text-align:left;}
+.table416col3{text-align:left;}
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table307 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table307header {text-align:center;font-weight:bold;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table307footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table307RowEven{}
+.table307RowOdd{background-color:#cdcdcd;}
+.table307col0{text-align:left;}
+.table307col1{text-align:left;}
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table220 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table220header {text-align:center;font-weight:bold;border:solid black 1px;color:#FFFFFF;background-color:#000000;}
+.table220footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table220RowEven{border:solid black 1px;}
+.table220RowOdd{background-color:#cdcdcd;background-color:#a8a8a8;border:solid black 1px;}
+.table220col0{border:solid black 1px;text-align:center;}
+.table220col1{border:solid black 1px;text-align:center;}
+.table220col2{border:solid black 1px;text-align:center;}
+.table220col3{border:solid black 1px;text-align:center;}
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table60 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table60header {text-align:center;font-weight:bold;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table60footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table60RowEven{}
+.table60RowOdd{background-color:#cdcdcd;}
+.table60col0{text-align:left;}
+.table60col1{text-align:left;}
+.table60col2{text-align:left;}
+.table60col3{text-align:left;}
+</style>
+<style type="text/css">table.table725 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table725header {text-align:center;font-weight:bold;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table725footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table725RowEven{}
+.table725RowOdd{background-color:#cdcdcd;}
+.table725col0{text-align:center;}
+.table725col1{text-align:center;}
+.table725col2{text-align:center;}
+.table725col3{text-align:center;}
+.table725col4{text-align:center;}
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table196 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table196header {text-align:center;font-weight:bold;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table196footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table196RowEven{}
+.table196RowOdd{background-color:#cdcdcd;}
+.table196col0{text-align:center;}
+.table196col1{text-align:center;}
+.table196col2{text-align:center;}
+.table196col3{text-align:center;}
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table661 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table661header {text-align:center;font-weight:bold;border:solid black 1px;color:#FFFFFF;background-color:#000000;}
+.table661footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table661RowEven{border-top:solid black 1px;border-bottom:solid black 1px;}
+.table661RowOdd{background-color:#cdcdcd;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table661col0{border-top:solid black 1px;border-bottom:solid black 1px;border-left:solid black 1px;text-align:left;}
+.table661col1{border-top:solid black 1px;border-bottom:solid black 1px;border-right:solid black 1px;text-align:left;}
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table399 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table399header {text-align:center;font-weight:bold;border:solid black 1px;color:#FFFFFF;background-color:#000000;}
+.table399footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table399RowEven{border-top:solid black 1px;border-bottom:solid black 1px;}
+.table399RowOdd{background-color:#cdcdcd;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table399col0{border-top:solid black 1px;border-bottom:solid black 1px;border-left:solid black 1px;text-align:left;}
+.table399col1{border-top:solid black 1px;border-bottom:solid black 1px;border-right:solid black 1px;text-align:left;}
+</style>
+<style type="text/css">
+</style>
+<style type="text/css">table.table654 {border:solid black 1px; border-collapse:collapse; border-spacing:0px;font-family:Arial,Helvetica,sans-serif; font-size:10pt; width:100% }
+.table654header {text-align:center;font-weight:bold;border:solid black 1px;color:#FFFFFF;background-color:#000000;}
+.table654footer {text-align:right;font-weight:bold;border:solid black 1px; height: 30px}
+.table654RowEven{border-top:solid black 1px;border-bottom:solid black 1px;}
+.table654RowOdd{background-color:#cdcdcd;border-top:solid black 1px;border-bottom:solid black 1px;}
+.table654col0{border-top:solid black 1px;border-bottom:solid black 1px;border-left:solid black 1px;text-align:left;}
+.table654col1{border-top:solid black 1px;border-bottom:solid black 1px;border-right:solid black 1px;text-align:left;}
+</style>
