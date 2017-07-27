@@ -1,7 +1,17 @@
 public class CustomerServicePageController {
     Public String searchStr{get;set;}
-    
-    Public List<rstk__socust__c> accList{get;set;}
+
+    Public List<rstk__socust__c> accList{
+    get{
+        if(setCtlr != null){
+            return (List<rstk__socust__c>)setCtlr.getRecords();
+        }
+        else{
+            return null;
+        }
+    }
+    set;}
+
     Public List<rstk__soinv__c> InvoiceO {get;set;}
     Public List<Order> ordList{get;set;}
     public List<rstk__sohdr__c> relatedOrders {get;set;}
@@ -9,7 +19,10 @@ public class CustomerServicePageController {
     public List<rstk__sorma__c  > RMAList{get;set;}
     public List<c2g__codaCashEntryLineItem__c  > PayList{get;set;}
     public List<c2g__codaCashEntry__c  > CashList{get;set;}
-    
+    public List<c2g__codaInvoice__c > FFSalesinvoice{get;set;}
+
+    public ApexPages.StandardSetController setCtlr {get; set;}
+
     public boolean showAccounts{get;set;}
     Public boolean showOrders{get;set;}
     Public boolean showInvoices{get;set;}
@@ -17,55 +30,106 @@ public class CustomerServicePageController {
     Public boolean showRMA{get;set;}
     Public boolean showPayments{get;set;}
     Public boolean showCash{get;set;}
-    
+    Public boolean showFFsales{get;set;}
+
     Public String selectedCustomerId{get; set;}
     Public String selectedAccountId{get; set;}
     Public String returnedAccount{get;set;}
-    
-    
+
+
     Public rstk__socust__c selectedCustomer{get;set;}
-    
+
     Public CustomerServicePageController(){
         showAccounts = false;
     }
-    
-    Public void search(){
-        accList = new List<rstk__socust__c>();
-        ordList = new List<Order>();
+
+    //Public void search(){
+    //    accList = new List<rstk__socust__c>();
+    //    ordList = new List<Order>();
+    //    if(searchStr.length() > 1){
+    //        String searchStr1 = '*'+searchStr+'*';
+    //        String searchQuery = 'FIND \'' + searchStr1 + '\'  RETURNING  rstk__socust__c (Id,Name,rstk__socust_custno__c, rstk__socust_sf_account__r.RecordType.Name),Order(name,OrderNumber,TotalAmount,PoDate,PoNumber), c2g__codaCashEntry__c (Id, name,c2g__Account__r.name) LIMIT 40';
+    //        List<List <sObject>> searchList = search.query(searchQuery);
+    //        accList = ((List<rstk__socust__c>)searchList[0]);
+    //        ordList = ((List<Order>)searchList[1]);
+    //        showAccounts = accList.size() > 0;
+    //        if(accList.size() == 0 && ordList.size() ==0 ){
+    //            apexPages.addmessage(new apexpages.message(apexpages.severity.Error, 'Sorry, no results returned with matching string..'));
+    //            return;
+    //        }
+    //    }
+    //    else{
+    //        apexPages.addmessage(new apexpages.message(apexpages.severity.Error, 'Please enter at least two characters..'));
+    //        return;
+    //    }
+    // }
+
+    public PageReference search(){
+        String query = '';
+        String searchStr1 = '*'+searchStr+'*';
         if(searchStr.length() > 1){
-            String searchStr1 = '*'+searchStr+'*';
-            String searchQuery = 'FIND \'' + searchStr1 + '\'  RETURNING  rstk__socust__c (Id,Name,rstk__socust_custno__c, rstk__socust_sf_account__r.RecordType.Name),Order(name,OrderNumber,TotalAmount,PoDate,PoNumber), c2g__codaCashEntry__c (Id, name,c2g__Account__r.name) LIMIT 13';
-            List<List <sObject>> searchList = search.query(searchQuery);
-            accList = ((List<rstk__socust__c>)searchList[0]);
+            query = 'FIND \'' + searchStr1 + '\' RETURNING rstk__socust__c (Id, Name, rstk__socust_custno__c, rstk__socust_sf_account__r.RecordType.Name), Order(name, OrderNumber, TotalAmount,PoDate, PoNumber), c2g__codaCashEntry__c (Id, name, c2g__Account__r.name),c2g__codaInvoice__c(Id,name,c2g__Account__c,c2g__InvoiceStatus__c,c2g__PaymentStatus__c)';
+            System.debug('Query --------->' + query);
+            List<List<sObject>> searchList = search.query(query);
+            List<rstk__socust__c> customers = ((List<rstk__socust__c>)searchList[0]);
             ordList = ((List<Order>)searchList[1]);
-            showAccounts = accList.size() > 0;
-            if(accList.size() == 0 && ordList.size() ==0 ){
-                apexPages.addmessage(new apexpages.message(apexpages.severity.Error, 'Sorry, no results returned with matching string..'));
-                return;
-            }
+            setCtlr = new ApexPages.StandardSetController(customers);
+            setCtlr.setPageSize(25);
         }
-        else{ 
-            apexPages.addmessage(new apexpages.message(apexpages.severity.Error, 'Please enter at least two characters..'));
-            return;
+        else{
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, 'Please enter search criteria'));
         }
+        return null;
     }
-    
+
     Public void orderDetails(){
+        System.debug('Getting customer with Id' + selectedCustomerId);
         selectedCustomer = [SELECT Id, Name, rstk__socust_sf_account__c FROM rstk__socust__c WHERE Id = :selectedCustomerId][0];
         selectedAccountId = selectedCustomer.rstk__socust_sf_account__c;
-        relatedOrders = [SELECT so.Name, so.rstk__sohdr_custno__c, so.rstk__sohdr_custpo__c, so.rstk__sohdr_ordertotal__c, so.rstk__sohdr_order__c, c.name, c.rstk__socust_custno__c, c.rstk__socust_creditlimit__c, c.rstk__socust_fincust__c FROM rstk__sohdr__c so, so.rstk__sohdr_custno__r c WHERE rstk__sohdr_custno__c = :selectedCustomerId ORDER BY so.rstk__sohdr_order__c DESC NULLS FIRST LIMIT 10];
-        InvoiceO = [SELECT Name,rstk__soinv_account__c,rstk__soinv_invdate__c,rstk__soinv_grandtotal__c,rstk__soinv_invoice__c,rstk__soinv_order__c FROM rstk__soinv__c  WHERE rstk__soinv_custno__c =:selectedCustomerId ORDER BY rstk__soinv_invdate__c DESC NULLS FIRST LIMIT 10];
-        SOship = [SELECT name,rstk__soship_custno__r.name, rstk__soship_order__c, rstk__soship_invoice__c, rstk__soship_total__c, rstk__soship_name__c, rstk__soship_address1__c FROM rstk__soship__c WHERE rstk__soship_custno__c =:selectedCustomerId ORDER BY name DESC NULLS FIRST LIMIT 10];
-        RMAList = [SELECT Name,rstk__sorma_custno__r.name,rstk__sorma_date__c,rstk__sorma_reason__c,rstk__sorma_soprod__c,rstk__sorma_sormh__c FROM rstk__sorma__c  WHERE rstk__sorma_custno__c =:selectedCustomerId ORDER BY rstk__sorma_date__c DESC NULLS FIRST LIMIT 10];
+        relatedOrders = [SELECT so.Name, so.rstk__sohdr_custno__c,so.rstk__sohdr_orderdate__c,so.rstk__sohdr_custpo__c, so.rstk__sohdr_ordertotal__c, so.rstk__sohdr_order__c,so.rstk__sohdr_closed__c, so.rstk__sohdr_cancelled__c,so.rstk__sohdr_hold__c,so.rstk__sohdr_credithold__c,c.name, c.rstk__socust_custno__c, c.rstk__socust_creditlimit__c, c.rstk__socust_fincust__c FROM rstk__sohdr__c so, so.rstk__sohdr_custno__r c WHERE rstk__sohdr_custno__c = :selectedCustomerId ORDER BY so.rstk__sohdr_orderdate__c DESC NULLS FIRST LIMIT 600];
+        InvoiceO = [SELECT Name,rstk__soinv_account__c,rstk__soinv_invdate__c,rstk__soinv_grandtotal__c,rstk__soinv_invoice__c,rstk__soinv_order__c,rstk__soinv_approved__c,rstk__soinv_div__c,Payment_Status__c,Invoice_Status__c FROM rstk__soinv__c  WHERE rstk__soinv_custno__c =:selectedCustomerId ORDER BY rstk__soinv_invdate__c DESC NULLS FIRST LIMIT 600];
+        SOship = [SELECT name,rstk__soship_custno__r.name, rstk__soship_order__c, rstk__soship_invoice__c, rstk__soship_total__c, rstk__soship_name__c, rstk__soship_address1__c,rstk__soship_tracking__c,rstk__soship_closed__c FROM rstk__soship__c WHERE rstk__soship_custno__c =:selectedCustomerId ORDER BY name DESC NULLS FIRST LIMIT 60];
+        RMAList = [SELECT Name,rstk__sorma_custno__r.name,rstk__sorma_date__c,rstk__sorma_reason__c,rstk__sorma_soprod__c,rstk__sorma_sormh__c,rstk__sorma_action__c FROM rstk__sorma__c  WHERE rstk__sorma_custno__c =:selectedCustomerId ORDER BY rstk__sorma_date__c DESC NULLS FIRST LIMIT 60];
         //PayList =[SELECT c2g__AccountPaymentMethod__c,c2g__Account__r.name,c2g__CashEntry__c,c2g__CashEntryDate__c,c2g__OwnerCompany__c,c2g__CashEntryValue__c,Id,Name FROM c2g__codaCashEntryLineItem__c  WHERE c2g__Account__c = :selectedCustomerId ORDER BY c2g__CashEntryDate__c ASC NULLS FIRST LIMIT 10];
-        Cashlist =[SELECT Name,c2g__Account__r.name,c2g__CashEntryCurrency__c,c2g__Date__c,c2g__Description__c,c2g__NetValue__c,c2g__OriginalCashEntry__c,c2g__PaymentMethod__c,c2g__Reference__c,c2g__Status__c,Id FROM c2g__codaCashEntry__c WHERE c2g__Account__c = :selectedAccountId ORDER BY c2g__Date__c DESC NULLS FIRST LIMIT 10];
-       
+        Cashlist =[SELECT Name,c2g__Account__r.name,c2g__CashEntryCurrency__c,c2g__Date__c,c2g__Description__c,c2g__NetValue__c,c2g__OriginalCashEntry__c,c2g__PaymentMethod__c,c2g__Reference__c,c2g__Status__c,Id FROM c2g__codaCashEntry__c WHERE c2g__Account__c = :selectedAccountId ORDER BY c2g__Date__c DESC NULLS FIRST LIMIT 60];
+        FFSalesinvoice = [SELECT Id,name,c2g__Account__c,c2g__InvoiceDate__c,c2g__InvoiceStatus__c,c2g__PaymentStatus__c FROM c2g__codaInvoice__c WHERE c2g__Account__c = :selectedAccountId ORDER BY c2g__InvoiceDate__c DESC NULLS FIRST LIMIT 60];
+
         showOrders = relatedOrders.size() > 0;
         showInvoices = InvoiceO.size() > 0;
         showShipping = SOship.size() > 0;
         showRMA = RMAList.size() > 0;
         //showpayments = Paylist.size() > 0;
         showcash = Cashlist.size() > 0;
+        showFFsales = FFSalesinvoice.size() > 0;
     }
-    
+
+    public Boolean hasNext{
+        get{
+            return setCtlr.getHasNext();
+        }
+        set;
+    }
+
+    public Boolean hasPrevious{
+        get{
+            return setCtlr.getHasPrevious();
+        }
+        set;
+    }
+
+    public Integer pageNumber{
+        get{
+            return setCtlr.getPageNumber();
+        }
+        set;
+    }
+
+    public void previous(){
+        setCtlr.previous();
+    }
+
+    public void next(){
+        setCtlr.next();
+    }
+
 }
