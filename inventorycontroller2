@@ -3,15 +3,13 @@ public with sharing class InventoryController{
 
     public List<rstk__icitem__c> inventoryList {get; set;}
 
-    Public List<Opportunity> optyList {get;set;}
-    Public List<contact> conList{get;set;}
-    Public List<account> accList{get;set;}
-
-    public List<LocationItem> itemList {get; set;}
-    AggregateResult[] itemByLocation;
+    public List<rstk__iclocitem__c> itemList {get; set;}
+    public AggregateResult[] itemByLocation {get;set;}
 
     public List<rstk__soline__c> SOitemList{get;set;}
     public List<rstk__poline__c> POitemList{get;set;}
+    public List<rstk__soline__c> SOOitemList{get;set;}
+    public List<rstk__poline__c> POOitemList{get;set;}
 
     Public boolean showitemsList{get;set;}
     Public boolean showSOitemList{get;set;}
@@ -28,8 +26,14 @@ public with sharing class InventoryController{
 
 
     public void soslDemo_method(){
-        searchStr = '%' + searchStr + '%';
-        inventoryList = [SELECT Id, rstk__icitem_descr__c, rstk__icitem_div__c,rstk__icitem_icitemcst__r.rstk__icitemcst_qtyoh__c, rstk__icitem_item__r.rstk__formula_item__c FROM rstk__icitem__c WHERE Name LIKE :searchStr LIMIT 10];
+        if(searchStr.length() > 1){
+            searchStr = '%' + searchStr + '%';
+            inventoryList = [SELECT Id, rstk__icitem_descr__c, rstk__icitem_div__r.name,rstk__icitem_icitemcst__r.rstk__icitemcst_qtyoh__c, rstk__icitem_item__r.rstk__formula_item__c FROM rstk__icitem__c WHERE Name LIKE :searchStr AND rstk__icitem_div__r.name='Ballantyne Strong, Inc. (BTN)' LIMIT 20];
+        }
+        else{
+            apexPages.addMessage(new apexPages.Message(ApexPages.Severity.Error, 'Please enter at least two characters.'));
+        }
+
     }
 
     // Public void soslDemo_method(){
@@ -61,60 +65,161 @@ public with sharing class InventoryController{
     // }
 
     public void relatedInfo(){
-        SOitemList = [SELECT Id,Name,rstk__soline_sohdr__r.rstk__sohdr_custno__c,rstk__soline_project__c,rstk__soline_duedate__c,rstk__soline_icitem__c,rstk__soline_price__c,rstk__soline_prod__c,rstk__soline_qtyorder__c,rstk__soline_shipdiv__c,rstk__soline_sohdr__c,rstk__soline_qtyship__c,rstk__soline_linestatustext__c FROM rstk__soline__c WHERE rstk__soline_icitem__c = :selectedItemId ORDER BY rstk__soline_duedate__c DESC LIMIT 15];
+        SOitemList = [SELECT Id,Name,rstk__soline_sohdr__r.rstk__sohdr_custno__c,rstk__soline_project__c,rstk__soline_duedate__c,rstk__soline_icitem__c,rstk__soline_price__c,rstk__soline_prod__c,rstk__soline_qtyorder__c,rstk__soline_shipdiv__c,rstk__soline_sohdr__c,rstk__soline_qtyship__c,rstk__soline_linestatustext__c,rstk__soline_shipsite__c,rstk__soline_shiplocid__c FROM rstk__soline__c WHERE rstk__soline_icitem__c = :selectedItemId AND rstk__soline_shipsite__r.name='WHSE (Main Warehouse)'  ORDER BY rstk__soline_duedate__c DESC LIMIT 30];
+        SOOitemList = [SELECT Id,Name,rstk__soline_sohdr__r.rstk__sohdr_custno__c,rstk__soline_project__c,rstk__soline_duedate__c,rstk__soline_icitem__c,rstk__soline_price__c,rstk__soline_prod__c,rstk__soline_qtyorder__c,rstk__soline_shipdiv__c,rstk__soline_sohdr__c,rstk__soline_qtyship__c,rstk__soline_linestatustext__c,rstk__soline_shipsite__c,rstk__soline_shiplocid__c FROM rstk__soline__c WHERE rstk__soline_icitem__c = :selectedItemId AND rstk__soline_shipsite__r.name!='WHSE (Main Warehouse)' ORDER BY rstk__soline_duedate__c DESC LIMIT 30];
         //itemList = [SELECT Id,Name,rstk__iclocitem_div__c,rstk__iclocitem_icitem__c,rstk__iclocitem_locid__c,rstk__iclocitem_locnum__c,rstk__iclocitem_locqty__c,rstk__iclocitem_loctype_pl__c FROM rstk__iclocitem__c WHERE rstk__iclocitem_icitem__c = :selecteditemId AND rstk__iclocitem_loctype_pl__c != 'Non-nettable' LIMIT 15];
+        itemList = new List<rstk__iclocitem__c>();
         itemByLocation = [SELECT Name,rstk__iclocitem_div__c,rstk__iclocitem_icitem__c,rstk__iclocitem_locid__c,rstk__iclocitem_locnum__c,SUM(rstk__iclocitem_locqty__c) rstk__iclocitem_locqty__c_sum,rstk__iclocitem_loctype_pl__c FROM rstk__iclocitem__c WHERE rstk__iclocitem_icitem__c = :selecteditemId AND rstk__iclocitem_loctype_pl__c != 'Non-nettable' GROUP BY rstk__iclocitem_locnum__c,Name,rstk__iclocitem_div__c,rstk__iclocitem_icitem__c,rstk__iclocitem_locid__c,rstk__iclocitem_loctype_pl__c];
+        System.debug('ItemByLocation ' + itemByLocation.size());
         if(itemByLocation != null){
             for(AggregateResult ar : itemByLocation){
-                LocationItem i = new LocationItem(ar);
-                try {
-
-              itemList.add(i);
-
+                rstk__iclocitem__c item = itemFromAr(ar);
+                itemList.add(item);
             }
-            catch (System.NullPointerException e) {
 
-
-
-        }
-
-            }
         }
         //POitemList =[SELECT Id,Name,rstk__poline_div__c,rstk__poline_duedte__c,rstk__poline_longdescr__c,rstk__poline_ordno__c,rstk__poline_qtyreq__c,rstk__poline_unitprice__c,rstk__poline_item__c FROM rstk__poline__c WHERE rstk__poline_item__c = :selecteditemId  LIMIT 20];
-        POitemList =[SELECT Id,Name,rstk__poline_div__c,rstk__poline_ordno__r.rstk__pohdr_vendno__c,rstk__poline_duedte__c,rstk__poline_longdescr__c,rstk__poline_ordno__c,rstk__poline_qtyreq__c,rstk__poline_unitprice__c,rstk__poline_item__c, rstk__poline_descr__c FROM rstk__poline__c WHERE rstk__poline_item__r.rstk__poitem_item__c =:selectedItemId ORDER BY rstk__poline_duedte__c DESC LIMIT 15];
+        POitemList =[SELECT Id,Name,rstk__poline_div__c,rstk__poline_ordno__r.rstk__pohdr_vendno__c,rstk__poline_duedte__c,rstk__poline_longdescr__c,rstk__poline_ordno__c,rstk__poline_qtyreq__c,rstk__poline_unitprice__c,rstk__poline_item__c, rstk__poline_descr__c,rstk__poline_receiptsite__c,rstk__poline_rcptlocid__c,rstk__formula_qtyrcvd__c, rstk__poline_qtyacc__c FROM rstk__poline__c WHERE rstk__poline_item__r.rstk__poitem_item__c =:selectedItemId AND rstk__poline_receiptsite__r.name='WHSE (Main Warehouse)' ORDER BY rstk__poline_duedte__c DESC LIMIT 30];
+        POOitemList =[SELECT Id,Name,rstk__poline_div__c,rstk__poline_ordno__r.rstk__pohdr_vendno__c,rstk__poline_duedte__c,rstk__poline_longdescr__c,rstk__poline_ordno__c,rstk__poline_qtyreq__c,rstk__poline_unitprice__c,rstk__poline_item__c, rstk__poline_descr__c,rstk__poline_receiptsite__c,rstk__poline_rcptlocid__c,rstk__formula_qtyrcvd__c, rstk__poline_qtyacc__c FROM rstk__poline__c WHERE rstk__poline_item__r.rstk__poitem_item__c =:selectedItemId AND rstk__poline_receiptsite__r.name!='WHSE (Main Warehouse)'  ORDER BY rstk__poline_duedte__c DESC LIMIT 30];
         showitemsList = itemByLocation.size() > 0;
         showSOitemList =SOitemList.size() > 0;
         showPOitemList =POitemList.size() > 0;
     }
 
-    public List<LocationItem> getItemList(){
-        List<LocationItem> items = new List<LocationItem>();
-        if(itemByLocation != null){
-            for(AggregateResult ar : itemByLocation){
-                System.debug(ar.get('name'));
-                items.add(new LocationItem(ar));
-            }
-        }
-        return items;
-    }
-
-    public class LocationItem{
-        public String name {get;set;}
-        public String division {get;set;}
-        public String itemNumber {get;set;}
-        public String locationId {get;set;}
-        public String locationNumber {get;set;}
-        public decimal aggregateQty {get;set;}
-        public String locationType {get;set;}
-
-        public LocationItem(AggregateResult ar){
-            name = (String)ar.get('name');
-            division = (String)ar.get('rstk__iclocitem_div__c');
-            itemNumber = String.valueOf(ar.get('rstk__iclocitem_icitem__c'));
-            locationId = String.valueOf(ar.get('rstk__iclocitem_locid__c'));
-            locationNumber = String.valueOf(ar.get('rstk__iclocitem_locnum__c'));
-            aggregateQty = (Decimal)ar.get('rstk__iclocitem_locqty__c_sum');
-            locationType = String.valueOf(ar.get('rstk__iclocitem_loctype_pl__c'));
-        }
+    public rstk__iclocitem__c itemFromAr(AggregateResult ar){
+        rstk__iclocitem__c item = new rstk__iclocitem__c();
+        item.name = (String)ar.get('name');
+        item.rstk__iclocitem_div__c = (String)ar.get('rstk__iclocitem_div__c');
+        item.rstk__iclocitem_icitem__c = (String)ar.get('rstk__iclocitem_icitem__c');
+        item.rstk__iclocitem_locid__c = (String)ar.get('rstk__iclocitem_locid__c');
+        item.rstk__iclocitem_locnum__c = (String)ar.get('rstk__iclocitem_locnum__c');
+        item.rstk__iclocitem_locqty__c = (Decimal)ar.get('rstk__iclocitem_locqty__c_sum');
+        item.rstk__iclocitem_loctype_pl__c = (String)ar.get('rstk__iclocitem_loctype_pl__c');
+        return item;
     }
 }
+
+<apex:page controller="InventoryController">
+   <apex:includeScript value="https://code.jquery.com/jquery-3.2.1.min.js"  />
+    <style>
+        /* Hide the Id column */
+        .invId{
+        display: none;
+        }
+    </style>
+    <script type="text/javascript">
+    $j = jQuery.noConflict();
+
+    // Click Search button when enter is pressed
+    $j(document).ready(function(){
+        $j(document).on("keypress", ".inputSearch", function(event){
+            if(event.keyCode == 13){
+                $j(".btnSearch").click();
+                return false;
+            }
+        });
+    });
+
+    // Call the actionFunction when a record is selected
+    function clickElem(elem){
+        var id = $j(elem).find(".invId").text();
+        console.log(id);
+        getRelatedInfo(id);
+    }
+    </script>
+  <apex:form >
+  <apex:inputText styleClass="inputSearch" value="{!searchStr}"/>
+    <apex:commandButton styleClass="btnSearch" value="Search Inventory" action="{!soslDemo_method}" reRender="inv" status="actStatusId"/>
+    <apex:actionStatus id="actStatusId">
+                <apex:facet name="start" >
+                    <img src="/img/loading.gif"/>
+                </apex:facet>
+    </apex:actionStatus>
+        <apex:actionFunction name="getRelatedInfo" action="{!relatedInfo}" reRender="details,soi,soo,invo,poi,poo" status="actStatusId">
+            <apex:param name="invId" assignTo="{!selectedItemId}" value=""/>
+        </apex:actionFunction>
+  </apex:form>
+
+    <apex:outputPanel title="" id="error">
+     <apex:pageMessages ></apex:pageMessages>
+     </apex:outputPanel>
+
+    <apex:pageBlock title="Inventory Items" id="inv">
+    <apex:pageblockTable value="{!inventoryList }" var="inv" onRowClick="clickElem(this);">
+          <apex:column headerClass="invId" value="{!inv.Id}" styleClass="invId"/>
+          <apex:column value="{!inv.rstk__icitem_descr__c}"/>
+          <apex:column value="{!inv.rstk__icitem_div__c}"/>
+          <apex:column value="{!inv.rstk__icitem_icitemcst__r.rstk__icitemcst_qtyoh__c}"/>
+          <apex:column value="{!inv.rstk__icitem_item__r.rstk__formula_item__c}"/>
+       </apex:pageblockTable>
+    </apex:pageBlock>
+
+ <apex:pageBlock title="Quantity on Hand " id="invo">
+    <apex:pageblockTable value="{!itemList}" var="itm">
+      <apex:column value="{!itm.name}"/>
+      <apex:column value="{!itm.rstk__iclocitem_div__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_icitem__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_locid__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_locqty__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_locnum__c}"/>
+      <apex:column value="{!itm.rstk__iclocitem_loctype_pl__c}"/>
+ </apex:pageblockTable>
+ </apex:pageBlock>
+
+ <apex:pageBlock title="Sales Orders Issued From Main Warehouse" id="soi">
+    <apex:pageblockTable value="{!SOitemList}" var="soi">
+      <apex:column value="{!soi.rstk__soline_sohdr__c}"/>
+      <apex:column value="{!soi.rstk__soline_sohdr__r.rstk__sohdr_custno__c}"/>
+      <apex:column value="{!soi.rstk__soline_duedate__c}"/>
+      <apex:column value="{!soi.rstk__soline_icitem__c}"/>
+      <apex:column value="{!soi.rstk__soline_qtyorder__c}"/>
+      <apex:column value="{!soi.rstk__soline_price__c}"/>
+      <apex:column value="{!soi.rstk__soline_qtyship__c}"/>
+      <apex:column value="{!soi.rstk__soline_linestatustext__c}"/>
+      <apex:column value="{!soi.rstk__soline_shipsite__c}"/>
+</apex:pageblockTable>
+ </apex:pageBlock>
+
+ <apex:pageBlock title="Sales Orders Issued From Other Locations" id="soo">
+    <apex:pageblockTable value="{!SOOitemList}" var="soo">
+      <apex:column value="{!soo.rstk__soline_sohdr__c}"/>
+      <apex:column value="{!soo.rstk__soline_sohdr__r.rstk__sohdr_custno__c}"/>
+      <apex:column value="{!soo.rstk__soline_duedate__c}"/>
+      <apex:column value="{!soo.rstk__soline_icitem__c}"/>
+      <apex:column value="{!soo.rstk__soline_qtyorder__c}"/>
+      <apex:column value="{!soo.rstk__soline_price__c}"/>
+      <apex:column value="{!soo.rstk__soline_qtyship__c}"/>
+      <apex:column value="{!soo.rstk__soline_linestatustext__c}"/>
+      <apex:column value="{!soo.rstk__soline_shipsite__c}"/>
+ </apex:pageblockTable>
+ </apex:pageBlock>
+
+    <apex:pageBlock title="Purchase Orders Issued From Main Warehouse" id="poi">
+    <apex:pageblockTable value="{!POitemList}" var="poi">
+      <apex:column value="{!poi.rstk__poline_ordno__c}"/>
+      <apex:column value="{!poi.rstk__poline_ordno__r.rstk__pohdr_vendno__c}"/>
+       <apex:column value="{!poi.rstk__poline_duedte__c}"/>
+      <apex:column value="{!poi.rstk__poline_unitprice__c}"/>
+      <apex:column value="{!poi.rstk__poline_div__c}"/>
+      <apex:column value="{!poi.rstk__poline_longdescr__c}"/>
+      <apex:column value="{!poi.rstk__poline_qtyreq__c}"/>
+      <apex:column value="{!poi.rstk__formula_qtyrcvd__c}"/>
+      <apex:column value="{!poi.rstk__poline_receiptsite__c}"/>
+</apex:pageblockTable>
+ </apex:pageBlock>
+
+    <apex:pageBlock title="Purchase Orders Issued From Other Locations" id="poo">
+    <apex:pageblockTable value="{!POOitemList}" var="poo">
+      <apex:column value="{!poo.rstk__poline_ordno__c}"/>
+      <apex:column value="{!poo.rstk__poline_ordno__r.rstk__pohdr_vendno__c}"/>
+      <apex:column value="{!poo.rstk__poline_duedte__c}"/>
+      <apex:column value="{!poo.rstk__poline_unitprice__c}"/>
+      <apex:column value="{!poo.rstk__poline_div__c}"/>
+      <apex:column value="{!poo.rstk__poline_longdescr__c}"/>
+      <apex:column value="{!poo.rstk__poline_qtyreq__c}"/>
+      <apex:column value="{!poo.rstk__formula_qtyrcvd__c}"/>
+      <apex:column value="{!poo.rstk__poline_receiptsite__c}"/>
+
+ </apex:pageblockTable>
+ </apex:pageBlock>
+</apex:page>
